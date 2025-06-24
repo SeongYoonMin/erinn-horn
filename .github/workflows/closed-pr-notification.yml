@@ -10,10 +10,43 @@ jobs:
     name: Discord Notification - Close PR
     runs-on: ubuntu-latest
     steps:
+      - name: Set PR Status (merged or closed)
+        id: pr_status
+        run: |
+          if [ "${{ github.event.pull_request.merged }}" = "true" ]; then
+            echo "status=종료된 PR" >> "$GITHUB_OUTPUT"
+            echo "color=13202687" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=반려된 PR" >> "$GITHUB_OUTPUT"
+            echo "color=16068656" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Send Closed PR Notification
         uses: Ilshidur/action-discord@master
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_USERNAME: TIME_LETTER_BOT
           DISCORD_AVATAR: "https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true"
-          DISCORD_EMBEDS: '[{"title":"${{ github.event.pull_request.merged == true && ''종료된 PR'' || ''반려된 PR'' }} : ${{ github.event.pull_request.title }}","color":${{ github.event.pull_request.merged == true && 13202687 || 16068656 }},"description":"${{ github.event.pull_request.html_url }}","fields":[{"name":"PR NUMBER","value":"#${{ github.event.pull_request.number }}","inline":true},{"name":"AUTHOR","value":"${{ github.event.pull_request.user.login }}","inline":true}]}]'
+          DISCORD_EMBEDS: >
+            [{
+              "title": "${{ steps.pr_status.outputs.status }} : ${{ github.event.pull_request.title }}",
+              "color": ${{ steps.pr_status.outputs.color }},
+              "description": "[PR 링크](${{ github.event.pull_request.html_url }})",
+              "fields": [
+                {
+                  "name": "PR NUMBER",
+                  "value": "#${{ github.event.pull_request.number }}",
+                  "inline": true
+                },
+                {
+                  "name": "AUTHOR",
+                  "value": "${{ github.event.pull_request.user.login }}",
+                  "inline": true
+                },
+                {
+                  "name": "CLOSED AT",
+                  "value": "${{ github.event.pull_request.closed_at }}",
+                  "inline": true
+                }
+              ]
+            }]
