@@ -9,34 +9,29 @@ jobs:
   create-pull-request:
     name: Discord Notification - Create PR
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Send PR Notification
         uses: Ilshidur/action-discord@master
         with:
-          args: '새로운 PR이 생성되었습니다: ${{ github.event.pull_request.html_url }}'
+          args: "새로운 PR이 생성되었습니다"
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_USERNAME: GITHUB_BOT
           DISCORD_AVATAR: https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true
           DISCORD_EMBEDS: >
             [{
-              "title":"새로운 PR 요청: ${{ github.event.pull_request.title }}",
+              "title":"[${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})",
               "color":10478271,
-              "description":"${{ github.event.pull_request.html_url }}",
+              "description":"PR NUMBER : ${{ github.event.pull_request.number }}",
               "fields":[
                 {
-                  "name":"PR NUMBER",
-                  "value":"#${{ github.event.pull_request.number }}",
-                  "inline":true
-                },
-                {
-                  "name":"AUTHOR",
+                  "name":"작성자",
                   "value":"${{ github.event.pull_request.user.login }}",
                   "inline":true
                 },
                 {
-                  "name":"CREATED AT",
+                  "name":"작성일",
                   "value":"${{ github.event.pull_request.created_at }}",
                   "inline":true
                 }
