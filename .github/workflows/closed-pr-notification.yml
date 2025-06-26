@@ -27,7 +27,7 @@ jobs:
           args: "종료된 PR이 생성되었습니다"
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          DISCORD_USERNAME: TIME_LETTER_BOT
+          DISCORD_USERNAME: ERINN-HORN-BOT
           DISCORD_AVATAR: "https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true"
           DISCORD_EMBEDS: >
             [{
