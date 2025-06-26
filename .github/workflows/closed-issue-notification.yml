@@ -12,27 +12,25 @@ jobs:
     steps:
       - name: Send Issue
         uses: Ilshidur/action-discord@master
+        with:
+          args: "종료된 이슈가 생성되었습니다"
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_USERNAME: GITHUB_BOT
           DISCORD_AVATAR: https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true
           DISCORD_EMBEDS: >
             [{
-              "title":"종료 이슈 사항: ${{ github.event.issue.title }}",
-              "color":13202687,"description":"${{ github.event.issue.html_url }}",
+              "title":"종료 이슈 사항: ${{ github.event.issue.title }} (${{ github.event.issue.html_url }})",
+              "color":13202687,
+              "description":"이슈 NUMBER: #${{ github.event.issue.number }}",
               "fields":[
                 {
-                  "name":"ISSUE NUMBER",
-                  "value":"#${{ github.event.issue.number }}",
-                  "inline":true
-                },
-                {
-                  "name":"AUTHOR",
+                  "name":"작성자",
                   "value":"${{ github.event.issue.user.login }}"
                   ,"inline":true
                 },
                 {
-                  "name":"CLOSED AT",
+                  "name":"작성일",
                   "value":"${{ github.event.issue.closed_at }}",
                   "inline":true
                 }

@@ -21,9 +21,9 @@ jobs:
           DISCORD_AVATAR: https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true
           DISCORD_EMBEDS: >
             [{
-              "title":"[${{ github.event.pull_request.title }}](${{ github.event.pull_request.html_url }})",
+              "title":"${{ github.event.pull_request.title }}(${{ github.event.pull_request.html_url }})",
               "color":10478271,
-              "description":"PR NUMBER : ${{ github.event.pull_request.number }}",
+              "description":"PR NUMBER : #${{ github.event.pull_request.number }}",
               "fields":[
                 {
                   "name":"작성자",

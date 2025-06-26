@@ -12,28 +12,25 @@ jobs:
     steps:
       - name: Send Issue
         uses: Ilshidur/action-discord@master
+        with:
+          args: "새로운 이슈가 생성되었습니다"
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           DISCORD_USERNAME: GITHUB_BOT
           DISCORD_AVATAR: https://github.com/pknu-wap/WAPP/blob/main/image/icon.png?raw=true
           DISCORD_EMBEDS: >
             [{
-              "title":"신규 이슈 사항:${{ github.event.issue.title }}",
+              "title":"신규 이슈 사항:${{ github.event.issue.title }} (${{ github.event.issue.html_url }})",
               "color":10478271,
-              "description":"${{ github.event.issue.html_url }}",
+              "description":"이슈 NUMBER: #${{ github.event.issue.number }}",
               "fields":[
                 {
-                  "name":"ISSUE NUMBER",
-                  "value":"#${{ github.event.issue.number }}",
-                  "inline":true
-                  },
-                  {
-                    "name":"AUTHOR",
+                    "name":"작성자",
                     "value":"${{ github.event.issue.user.login }}",
                     "inline":true
                   },
                   {
-                    "name":"CREATED AT",
+                    "name":"작성일",
                     "value":"${{ github.event.issue.created_at }}",
                     "inline":true
                   }
