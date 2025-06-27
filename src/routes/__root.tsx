@@ -1,7 +1,6 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import Header from "../components/layout/header";
-import Footer from "../components/layout/footer";
+import { Header, Footer } from "../components/layout";
 
 // npx tsr generate
 

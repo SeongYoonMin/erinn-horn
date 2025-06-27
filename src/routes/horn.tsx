@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { HornContainer } from "../components/container";
 
 export const Route = createFileRoute("/horn")({
-  component: Horn,
+  component: HornPage,
 });
 
-function Horn() {
-  return <div>Horn</div>;
+function HornPage() {
+  return <HornContainer />;
 }
