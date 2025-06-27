@@ -1,7 +1,7 @@
-import { useGetHornBugle } from "../../hooks/useGetHornBugle";
-import { formatDate } from "../../utils/formatDate";
+import { useGetHornBugle } from "@/hooks";
+import { formatDate } from "@/utils/formatDate";
 import { useEffect, useRef, useState } from "react";
-import type { INexonHornBugleWorldHistory } from "../../types/nexon";
+import type { INexonHornBugleWorldHistory } from "@/types/nexon";
 
 const PAGE_SIZE = 20;
 
@@ -32,9 +32,9 @@ const HornContainer = () => {
   if (data.length === 0) return null;
   return (
     <div className="flex flex-col gap-5 py-10">
-      {hornData.map((item: INexonHornBugleWorldHistory) => (
+      {hornData.map((item: INexonHornBugleWorldHistory, index) => (
         <div
-          key={item.character_name}
+          key={`${item.character_name}-${index}`}
           className="flex items-center justify-center shadow-md p-5 rounded-md gap-2"
         >
           {!item.message.includes(item.character_name) && (

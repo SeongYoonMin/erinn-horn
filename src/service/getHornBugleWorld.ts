@@ -1,8 +1,8 @@
-import { customAxios } from "../lib/axios";
+import { customAxios } from "@/lib/axios";
 import type {
   INexonHornBugleWorldHistory,
   MabinogiServerName,
-} from "../types/nexon";
+} from "@/types/nexon";
 
 export const getHornBugleWorld = async ({
   serverName,

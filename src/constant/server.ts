@@ -1,4 +1,4 @@
-import type { MabinogiServerName } from "../types/nexon";
+import type { MabinogiServerName } from "@/types/nexon";
 
 export const SERVER_NAME: MabinogiServerName[] = [
   "류트",

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getHornBugleWorld } from "../service/getHornBugleWorld";
-import type { MabinogiServerName } from "../types/nexon";
+import { getHornBugleWorld } from "@/service/getHornBugleWorld";
+import type { MabinogiServerName } from "@/types/nexon";
 
 export const useGetHornBugle = ({
   serverName,
@@ -10,7 +10,8 @@ export const useGetHornBugle = ({
   return useQuery({
     queryKey: ["getHornBugleWorld", serverName],
     queryFn: () => getHornBugleWorld({ serverName }),
-    staleTime: 1000 * 60 * 1,
+    // refetchInterval: 1000 * 60,
+    // refetchIntervalInBackground: true,
     enabled: !!serverName,
   });
 };
