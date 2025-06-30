@@ -1,30 +1,30 @@
-import { useMemo } from "react";
-import type { INexonHornBugleWorldHistory } from "@/types/nexon";
+// hooks/useGetHornBugleInfinite.ts
+import { useRef, useState, useCallback } from "react";
+import { useGetHornBugle } from "@/hooks"; // 원래의 데이터 패칭 훅
+import type { MabinogiServerName } from "@/types/nexon";
 
-export const useFilteredHornBugle = ({
-  hornData,
-  search,
-  page,
-  pageSize,
-}: {
-  hornData: INexonHornBugleWorldHistory[];
-  search: string;
-  page: number;
-  pageSize: number;
-}) => {
-  const filtered = useMemo(() => {
-    let result = hornData;
+const PAGE_SIZE = 20;
 
-    if (search.trim()) {
-      result = result.filter((post) => post.message.includes(search));
+export function useGetHornBugleInfinite(serverName: MabinogiServerName) {
+  const { data = [], isLoading } = useGetHornBugle({ serverName });
+  const [page, setPage] = useState(1);
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  const visibleData = data.slice(0, page * PAGE_SIZE);
+  const hasMore = visibleData.length < data.length;
+
+  const loadMore = useCallback(() => {
+    if (hasMore) {
+      setPage((prev) => prev + 1);
     }
+  }, [hasMore]);
 
-    return result;
-  }, [hornData, search]);
-
-  const visible = useMemo(() => {
-    return filtered.slice(0, page * pageSize);
-  }, [filtered, page, pageSize]);
-
-  return { filteredHornData: filtered, visibleHornData: visible };
-};
+  // IntersectionObserver는 컴포넌트에서 등록
+  return {
+    observerRef,
+    data: visibleData,
+    isLoading,
+    loadMore,
+    hasMore,
+  };
+}

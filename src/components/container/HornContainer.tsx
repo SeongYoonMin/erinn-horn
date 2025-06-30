@@ -1,24 +1,35 @@
-import { useGetHornBugle } from "../../hooks/useGetHornBugle";
-import { formatDate } from "../../utils/formatDate";
-import { useEffect, useRef, useState } from "react";
-import type { INexonHornBugleWorldHistory } from "../../types/nexon";
-
-const PAGE_SIZE = 20;
+import { useGetHornBugleInfinite } from "@/hooks";
+import { useEffect, useState } from "react";
+import type { MabinogiServerName } from "@/types/nexon";
+import { HornList, KeywordForm, ServerForm } from "@/components/horn";
 
 const HornContainer = () => {
-  const [page, setPage] = useState(1);
-  const observerRef = useRef<HTMLDivElement>(null);
+  const [serverName, setServerName] = useState<MabinogiServerName>("류트");
+  const [keywordList, setKeywordList] = useState<string[]>([]);
+  const {
+    data: hornData,
+    isLoading,
+    observerRef,
+    loadMore,
+    hasMore,
+  } = useGetHornBugleInfinite(serverName);
 
-  const { data = [], isLoading } = useGetHornBugle({ serverName: "류트" });
-  const hornData = data.slice(0, PAGE_SIZE * page);
+  const handleServerName = (serverName: MabinogiServerName) => {
+    setServerName(serverName);
+  };
+
+  const handleAddKeyword = (keyword: string) => {
+    console.log(keywordList);
+    setKeywordList((prev) => [...prev, keyword]);
+  };
 
   useEffect(() => {
-    if (!observerRef.current || hornData.length >= data.length) return;
+    if (!observerRef.current || !hasMore) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setPage((prev) => prev + 1);
+          loadMore();
         }
       },
       { threshold: 1 },
@@ -26,26 +37,17 @@ const HornContainer = () => {
 
     observer.observe(observerRef.current);
     return () => observer.disconnect();
-  }, [hornData, data]);
+  }, [observerRef, loadMore, hasMore]);
 
   if (isLoading) return <div>Loading...</div>;
-  if (data.length === 0) return null;
+  if (hornData.length === 0) return null;
+
   return (
-    <div className="flex flex-col gap-5 py-10">
-      {hornData.map((item: INexonHornBugleWorldHistory) => (
-        <div
-          key={item.character_name}
-          className="flex items-center justify-center shadow-md p-5 rounded-md gap-2"
-        >
-          {!item.message.includes(item.character_name) && (
-            <p>{`${item.character_name} : `}</p>
-          )}
-          <p>{item.message}</p>
-          <p>{formatDate(item.date_send)}</p>
-        </div>
-      ))}
-      <div ref={observerRef} />
-    </div>
+    <>
+      <ServerForm serverName={serverName} setServerName={handleServerName} />
+      <KeywordForm addKeyword={handleAddKeyword} />
+      <HornList hornData={hornData} observerRef={observerRef} />
+    </>
   );
 };
 
