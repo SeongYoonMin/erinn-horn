@@ -1,7 +1,8 @@
 import { useGetHornBugleInfinite } from "@/hooks";
 import { useEffect, useState } from "react";
 import type { MabinogiServerName } from "@/types/nexon";
-import { HornList, KeywordForm, ServerForm } from "@/components/horn";
+import { HornList, ServerForm, KeywordForm } from "@/components/horn";
+
 
 const HornContainer = () => {
   const [serverName, setServerName] = useState<MabinogiServerName>("류트");
@@ -12,14 +13,13 @@ const HornContainer = () => {
     observerRef,
     loadMore,
     hasMore,
-  } = useGetHornBugleInfinite(serverName);
+  } = useGetHornBugleInfinite(serverName, keywordList);
 
   const handleServerName = (serverName: MabinogiServerName) => {
     setServerName(serverName);
   };
 
   const handleAddKeyword = (keyword: string) => {
-    console.log(keywordList);
     setKeywordList((prev) => [...prev, keyword]);
   };
 
@@ -43,11 +43,26 @@ const HornContainer = () => {
   if (hornData.length === 0) return null;
 
   return (
-    <>
-      <ServerForm serverName={serverName} setServerName={handleServerName} />
-      <KeywordForm addKeyword={handleAddKeyword} />
+    <div className="py-5 px-4 xl:px-0">
+      <div className="flex items-center justify-center gap-4">
+        <ServerForm serverName={serverName} setServerName={handleServerName} />
+        <KeywordForm addKeyword={handleAddKeyword} />
+      </div>
+      <div className="mt-4 text-center text-gray-500">
+        {keywordList.length > 0 ? (
+          <p>
+            검색어:{" "}
+            {keywordList.map((keyword, index) => (
+              <span key={index} className="font-bold">
+                {keyword}
+                {index < keywordList.length - 1 ? ", " : ""}
+              </span>
+            ))}
+          </p>
+        ) : <div className="flex itmes-center justify-center py-10"><p>검색어를 추가하시면 해당 검색어가 생성 될 시 알람이 나타납니다.</p></div>}
+      </div>
       <HornList hornData={hornData} observerRef={observerRef} />
-    </>
+    </div>
   );
 };
 
