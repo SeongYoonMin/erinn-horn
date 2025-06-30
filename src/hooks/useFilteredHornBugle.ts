@@ -5,12 +5,14 @@ import type { MabinogiServerName } from "@/types/nexon";
 
 const PAGE_SIZE = 20;
 
-export function useGetHornBugleInfinite(serverName: MabinogiServerName) {
+export function useGetHornBugleInfinite(serverName: MabinogiServerName, keywordList: string[]) {
   const { data = [], isLoading } = useGetHornBugle({ serverName });
   const [page, setPage] = useState(1);
   const observerRef = useRef<HTMLDivElement | null>(null);
 
-  const visibleData = data.slice(0, page * PAGE_SIZE);
+  const visibleData = keywordList.length > 0 ? data.filter(({ message }) =>
+    keywordList.some(keyword => message.includes(keyword))
+  ).slice(0, page * PAGE_SIZE) : data.slice(0, page * PAGE_SIZE);
   const hasMore = visibleData.length < data.length;
 
   const loadMore = useCallback(() => {
