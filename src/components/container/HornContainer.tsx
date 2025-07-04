@@ -1,6 +1,6 @@
 import { useHornBugleList, useKeywordManage } from "@/hooks";
 import type { MabinogiServerName } from "@/types/nexon";
-import { useServerName } from "@/hooks/useServerName";
+import { useServerName } from "@/hooks";
 import { uniqueIndex } from "@/utils/uniqueIndex";
 import { ServerForm, KeywordForm, HornList } from "../horn";
 import { useEffect } from "react";

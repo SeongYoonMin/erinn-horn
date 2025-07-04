@@ -3,7 +3,7 @@
 import React from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useInputText } from "@/hooks/useInputText";
+import { useInputText } from "@/hooks";
 
 const KeywordForm = ({
   addKeyword,
