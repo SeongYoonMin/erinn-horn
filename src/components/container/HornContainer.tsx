@@ -1,67 +1,62 @@
-import { useHornBugleInfinite } from "@/hooks";
-import { useEffect, useState } from "react";
+import { useHornBugleList, useKeywordManage } from "@/hooks";
 import type { MabinogiServerName } from "@/types/nexon";
-import { HornList, ServerForm, KeywordForm } from "@/components/horn";
-
+import { useServerName } from "@/hooks/useServerName";
+import { uniqueIndex } from "@/utils/uniqueIndex";
+import { ServerForm, KeywordForm, HornList } from "../horn";
+import { useEffect } from "react";
 
 const HornContainer = () => {
-  const [serverName, setServerName] = useState<MabinogiServerName>("류트");
-  const [keywordList, setKeywordList] = useState<string[]>([]);
-  const {
-    data: hornData,
-    isLoading,
-    observerRef,
-    loadMore,
-    hasMore,
-  } = useHornBugleInfinite(serverName, keywordList);
+  const { serverName, setServerName } = useServerName();
+  const { keywordList, handleAddKeyword, handleRemoveKeyword } =
+    useKeywordManage();
+  const { data: hornData, isLoading } = useHornBugleList(
+    serverName,
+    keywordList,
+  );
 
   const handleServerName = (serverName: MabinogiServerName) => {
     setServerName(serverName);
   };
-
-  const handleAddKeyword = (keyword: string) => {
-    setKeywordList((prev) => [...prev, keyword]);
-  };
-
   useEffect(() => {
-    if (!observerRef.current || !hasMore) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          loadMore();
-        }
-      },
-      { threshold: 1 },
-    );
-
-    observer.observe(observerRef.current);
-    return () => observer.disconnect();
-  }, [observerRef, loadMore, hasMore]);
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+  }, []);
 
   if (isLoading) return <div>Loading...</div>;
-  if (hornData.length === 0) return null;
 
   return (
-    <div className="py-5 px-4 xl:px-0">
-      <div className="flex items-center justify-center gap-4">
+    <div className="py-10 px-4 xl:px-0 space-y-5">
+      <div className="flex flex-col items-center justify-center gap-4">
         <ServerForm serverName={serverName} setServerName={handleServerName} />
         <KeywordForm addKeyword={handleAddKeyword} />
-      </div>
-      <div className="mt-4 text-center text-gray-500">
         {keywordList.length > 0 ? (
-          <p>
-            검색어:{" "}
+          <ul className="mt-4 text-center flex items-center justify-center gap-2 flex-wrap">
             {keywordList.map((keyword, index) => (
-              <span key={index} className="font-bold">
-                {keyword}
-                {index < keywordList.length - 1 ? ", " : ""}
-              </span>
+              <li
+                className="px-2 py-1 bg-gray-100 rounded-md flex items-center justify-center gap-2 text-[#333]"
+                key={uniqueIndex(index)}
+              >
+                <p className="font-bold">{keyword}</p>
+                <button
+                  type="button"
+                  className="cursor-pointer"
+                  onClick={() => handleRemoveKeyword(keyword)}
+                >
+                  X
+                </button>
+              </li>
             ))}
-          </p>
-        ) : <div className="flex itmes-center justify-center py-10"><p>검색어를 추가하시면 해당 검색어가 생성 될 시 알람이 나타납니다.</p></div>}
+          </ul>
+        ) : (
+          <div className="flex items-center justify-center text-gray-500">
+            <p>
+              검색어를 추가하시면 해당 검색어가 생성 될 시 알람이 나타납니다.
+            </p>
+          </div>
+        )}
       </div>
-      <HornList hornData={hornData} observerRef={observerRef} />
+      <HornList hornData={hornData} />
     </div>
   );
 };
