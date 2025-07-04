@@ -10,7 +10,7 @@ export const useGetHornBugle = ({
   return useQuery({
     queryKey: ["getHornBugleWorld", serverName],
     queryFn: () => getHornBugleWorld({ serverName }),
-    refetchInterval: 1000 * 60,
+    refetchInterval: 1000 * 10,
     refetchIntervalInBackground: true,
     enabled: !!serverName,
   });
