@@ -1,4 +1,4 @@
-import { useGetHornBugleInfinite } from "@/hooks";
+import { useHornBugleInfinite } from "@/hooks";
 import { useEffect, useState } from "react";
 import type { MabinogiServerName } from "@/types/nexon";
 import { HornList, ServerForm, KeywordForm } from "@/components/horn";
@@ -13,7 +13,7 @@ const HornContainer = () => {
     observerRef,
     loadMore,
     hasMore,
-  } = useGetHornBugleInfinite(serverName, keywordList);
+  } = useHornBugleInfinite(serverName, keywordList);
 
   const handleServerName = (serverName: MabinogiServerName) => {
     setServerName(serverName);

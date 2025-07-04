@@ -1,11 +1,10 @@
-// hooks/useGetHornBugleInfinite.ts
 import { useRef, useState, useCallback } from "react";
-import { useGetHornBugle } from "@/hooks"; // 원래의 데이터 패칭 훅
+import { useGetHornBugle } from "@/hooks/api/useGetHornBugle"; // 원래의 데이터 패칭 훅
 import type { MabinogiServerName } from "@/types/nexon";
 
 const PAGE_SIZE = 20;
 
-export function useGetHornBugleInfinite(serverName: MabinogiServerName, keywordList: string[]) {
+export function useHornBugleInfinite(serverName: MabinogiServerName, keywordList: string[]) {
   const { data = [], isLoading } = useGetHornBugle({ serverName });
   const [page, setPage] = useState(1);
   const observerRef = useRef<HTMLDivElement | null>(null);
